@@ -187,10 +187,10 @@ func (s *systemd) Uninstall() error {
 	if err := os.Remove(cp); err != nil {
 		return err
 	}
-	if err := run("systemctl", "reset-failed", s.Name+".service"); err != nil {
+	if err := run("sytemctl", "daemon-reload"); err != nil {
 		return err
 	}
-	return nil
+	return run("systemctl", "reset-failed", s.Name+".service")
 }
 
 func (s *systemd) Logger(errs chan<- error) (Logger, error) {
