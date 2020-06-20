@@ -187,6 +187,9 @@ func (s *systemd) Uninstall() error {
 	if err := os.Remove(cp); err != nil {
 		return err
 	}
+	if err := run("systemctl", "reset-failed", s.Name+".service"); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -248,7 +251,7 @@ func (s *systemd) Restart() error {
 const systemdScript = `[Unit]
 Description={{.Description}}
 ConditionFileIsExecutable={{.Path|cmdEscape}}
-{{range $i, $dep := .Dependencies}} 
+{{range $i, $dep := .Dependencies}}
 {{$dep}} {{end}}
 
 [Service]
